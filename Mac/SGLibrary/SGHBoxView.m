@@ -83,17 +83,30 @@
 	return [self majorOutterMargin];
 }
 
-#if 0
+/*
+ * Called whenever App Kit thinks the rectangle representing our NSView is
+ * dirty and needs to be redrawn, including the initial setup.
+ *
+ * By drawing a filled rectangle within the bounds of ourselves, we effectively
+ * set the background despite NSView not really supporting that.
+ *
+ * FIXME: This should really be handled by our base class (SGView).
+ *
+ */
 - (void) drawRect:(NSRect) aRect
 {
+    // ???: Do we strictly need to call to super here?
 	[super drawRect:aRect];
 	
-	[[NSColor redColor] set];
+    [[NSColor windowBackgroundColor] setFill]; // The system window background
 	[[NSGraphicsContext currentContext] setShouldAntialias:false];
 	NSBezierPath *p = [NSBezierPath bezierPathWithRect:[self bounds]];
-	[p setLineWidth:5];
+	[p fill];
+#if 0
+    // For debugging
+    [p setLineWidth:5];
 	[p stroke];
-}
 #endif
+}
 
 @end
