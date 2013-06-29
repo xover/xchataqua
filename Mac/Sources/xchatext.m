@@ -9,6 +9,7 @@
 #import "SystemVersion.h"
 
 #import "PluginManager.h"
+#import "XAFileUtil.h"
 
 #include "text.h"
 #include "plugin.h"
@@ -16,7 +17,7 @@
 char *get_xdir_fs(void) {
     static NSString *applicationSupportDirectory = nil;
     if (applicationSupportDirectory == nil) {
-        applicationSupportDirectory = [[SGFileUtility findApplicationSupportFor:@PRODUCT_NAME] retain];
+        applicationSupportDirectory = [[[XAFileUtil findSupportFolderFor:@PRODUCT_NAME] path] retain];
     }
     return (char *)[applicationSupportDirectory UTF8String];
 }
@@ -39,13 +40,13 @@ char *get_downloaddir_fs(void) {
 }
 
 char *get_plugin_bundle_path(char *filename) {
-    NSString *bundlePath = [NSString stringWithUTF8String:filename];
+    NSString *bundlePath = @(filename);
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
     if (bundle == nil) {
         return NULL;
     }
     
-    NSString *version = [[bundle infoDictionary] objectForKey:@"XChatAquaMacOSVersionBranch"];
+    NSString *version = [bundle infoDictionary][@"XChatAquaMacOSVersionBranch"];
     if(version != nil && [[SystemVersion systemBranch] compare:version options:NSNumericSearch] != NSOrderedSame) {
         return NULL;
     }

@@ -84,8 +84,10 @@ applescript_cb (char *word[], char *word_eol[], void *userdata)
 
 static NSString *fix_url (const char *url)
 {
-    NSString *ret = [NSString stringWithUTF8String:url];
-    
+    NSString *ret = @(url);
+
+    // TODO: Replace this with NSRegularExpression or Data Detectors
+    // (and phase out SGRegex; this is its only use in XCA)
     SGRegex *regex = [SGRegex
                       regexWithString:@"(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?"
                       nSubExpr:2];

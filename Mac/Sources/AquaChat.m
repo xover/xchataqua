@@ -81,9 +81,25 @@ struct XATextEventItem XATextEvents[NUM_XP];
 AquaChat *AquaChatSharedObject;
 
 @implementation AquaChat
+
 @synthesize font, boldFont;
 @synthesize palette=_palette;
 @synthesize mainWindow=_mainWindow;
+
+//Main menu
+// File menu
+@synthesize channelTabMenuItem=_channelTabMenuItem, serverTabMenuItem=_serverTabMenuItem;
+// View menu
+@synthesize userListMenuItem=_userListMenuItem, userlistButtonsMenuItem=_userlistButtonsMenuItem, modeButtonsMenuItem=_modeButtonsMenuItem;
+// IRC menu
+@synthesize invisibleMenuItem=_invisibleMenuItem;
+@synthesize receiveWallopsMenuItem=_receiveWallopsMenuItem, receiveNoticesMenuItem=_receiveNoticesMenuItem;
+@synthesize awayMenuItem=_awayMenuItem;
+// Usermenu menu
+@synthesize userMenu=_userMenu;
+// Window menu
+@synthesize nextWindowMenuItem=_nextWindowMenuItem, previousWindowMenuItem=_previousWindowMenuItem;
+//End of main menu
 
 - (void) post_init
 {    
@@ -125,7 +141,7 @@ AquaChat *AquaChatSharedObject;
     if (value == 0) {
         tile.badgeLabel = nil;
     } else {
-        tile.badgeLabel = [NSString stringWithFormat:@"%ld", value];
+        tile.badgeLabel = [NSString stringWithFormat:@"%ld", (long)value];
     }
     _badgeCount = value;
 }
@@ -155,14 +171,14 @@ AquaChat *AquaChatSharedObject;
     NSString* keyCodeString;
     keyCodeString = SRStringForKeyCode(prefs.tab_left_key);
     if ( keyCodeString != nil ) {
-        [previousWindowMenuItem setKeyEquivalent:keyCodeString];
-        [previousWindowMenuItem setKeyEquivalentModifierMask:prefs.tab_left_modifiers];
+        [self.previousWindowMenuItem setKeyEquivalent:keyCodeString];
+        [self.previousWindowMenuItem setKeyEquivalentModifierMask:prefs.tab_left_modifiers];
     }
     
     keyCodeString = SRStringForKeyCode(prefs.tab_right_key);
     if ( keyCodeString != nil ) {
-        [nextWindowMenuItem setKeyEquivalent:keyCodeString];
-        [nextWindowMenuItem setKeyEquivalentModifierMask:prefs.tab_right_modifiers];
+        [self.nextWindowMenuItem setKeyEquivalent:keyCodeString];
+        [self.nextWindowMenuItem setKeyEquivalentModifierMask:prefs.tab_right_modifiers];
     }
     
     if (prefs.identd)
@@ -231,9 +247,9 @@ AquaChat *AquaChatSharedObject;
         format_event (sess, event, args, o, sizeof (o), 1);
         if (o[0])
         {
-            NSString *title = [NSString stringWithUTF8String:te[event].name];
+            NSString *title = @(te[event].name);
             char *x = strip_color (o, -1, STRIP_ALL);
-            NSString *description = [NSString stringWithUTF8String:x];
+            NSString *description = @(x);
             [self growl:description title:title];
             free (x);
         }
@@ -324,7 +340,7 @@ AquaChat *AquaChatSharedObject;
     NSUInteger count = [windows count];
     
     while (count--) {
-        [[windows objectAtIndex:count] close];
+        [windows[count] close];
     }
     
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -507,31 +523,46 @@ AquaChat *AquaChatSharedObject;
     [(FriendWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:FriendWindowKey] update];
 }
 
-- (void) playWaveNamed:(const char *)filename
-{
-    NSString *key = [NSString stringWithUTF8String:filename];
-    NSSound *sound = [soundCache objectForKey:key];
-    
-    if (sound == nil)
-    {
-        NSString *path = key;
-        
-        if ([key characterAtIndex:0] != '/')
-        {
-            NSString *bundle = [[NSBundle mainBundle] bundlePath];
-            path = [NSString stringWithFormat:@"%@/../Sounds/%@", bundle, key];
-        }
-        
-        sound = [[NSSound alloc] initWithContentsOfFile:path byReference:NO];
-        if (sound == nil)
+//
+// Plays a named sound file using NSSound
+//
+// This method is called by fe-aqua.m:fe_play_wave(), which is in turn invoked
+// by xchat's text.c:sound_play(). Its argument is the name of a sound file
+// that xchat gets from the settings, who are in turn populated by XCA's
+// PreferencesWindow.m:loadSounds:.
+//
+- (void) playWaveNamed:(const char *)filename {
+    // Older versions of the code used fully qualified paths to identify the
+    // sound file to play; so strip leading path and filename extension from the
+    // passed in filename, if any, to account for data from old prefs files.
+    NSString *soundName = [[@(filename) lastPathComponent] stringByDeletingPathExtension];
+
+    // If there's a cached NSSound object for this sound, use it.
+    NSSound *sound = soundCache[soundName];
+
+    // If there wasn't a hit in the cache
+    if (sound == nil) {
+        // Ask NSSound to search for a sound file by name and init with that
+        NSSound *sound = [NSSound soundNamed:soundName];
+
+        // No sound with that name was found, so just beep and bail out
+        if (sound == nil) {
+            NSBeep();
+            NSLog(@"Configured sound named \"%@\" was not found.", soundName);
             return;
-        [soundCache setObject:sound forKey:key];
-        [sound setName:path];
-        [sound release];
+        }
+
+        soundCache[soundName] = sound; // Cache it for next time
     }
-    
-    if (![sound isPlaying])
+
+    // Play the sound unless it is already playing (from the previous event)
+    //
+    // Note that NSSound stops playing a sound when the object is deallocated,
+    // so this code will break if the caching above is removed: it relies on the
+    // NSMutableDictionary that backs soundCache retaining the NSSound object.
+    if (![sound isPlaying]) {
         [sound play];
+    }
 }
 
 - (void) openNetworkWindowForSession:(struct session *)sess
@@ -542,7 +573,7 @@ AquaChat *AquaChatSharedObject;
 
 - (void) addUrl:(const char *) url
 {
-    [(UrlGrabberWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UrlGrabberWindowKey] addUrl:[NSString stringWithUTF8String:url]];
+    [(UrlGrabberWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UrlGrabberWindowKey] addUrl:@(url)];
 }
 
 - (void) ctrl_gui:(session *) sess action:(int) action arg:(int) arg
@@ -613,9 +644,13 @@ AquaChat *AquaChatSharedObject;
     [current_sess->gui->controller doMircColor:sender];
 }
 
-- (void) toggleAway:(id)sender
-{
-    handle_command (current_sess, "away", FALSE);
+- (void)toggleAway:(id)sender {
+    NSMenuItem *item = sender;
+    if (item.state == NSOffState) {
+        handle_command (current_sess, "away", FALSE);
+    } else {
+        handle_command (current_sess, "back", FALSE);
+    }
 }
 
 - (void) showChannelWindow:(id)sender
@@ -675,7 +710,7 @@ AquaChat *AquaChatSharedObject;
 - (void) openNewServer:(id)sender
 {
     int old = prefs.tabchannels;
-    prefs.tabchannels = sender == newServerTabMenuItem;
+    prefs.tabchannels = sender == self.serverTabMenuItem;
     new_ircwindow (NULL, NULL, SESS_SERVER, true);
     prefs.tabchannels = old;
 }
@@ -683,7 +718,7 @@ AquaChat *AquaChatSharedObject;
 - (void) openNewChannel:(id)sender
 {
     int old = prefs.tabchannels;
-    prefs.tabchannels = sender == newChannelTabMenuItem;
+    prefs.tabchannels = sender == self.channelTabMenuItem;
     new_ircwindow (current_sess->server, NULL, SESS_CHANNEL, true);
     prefs.tabchannels = old;
 }
@@ -763,9 +798,25 @@ AquaChat *AquaChatSharedObject;
     [[NSApp keyWindow] performClose:sender];
 }
 
-- (void) toggleAwayToValue:(bool) is_away
-{
-    [awayMenuItem setState:is_away ? NSOnState : NSOffState];
+- (void)toggleAwayToValue:(BOOL)isAway {
+    [self.awayMenuItem setState:isAway ? NSOnState : NSOffState];
+    NSColor *awayColor;
+    if (prefs.style_inputbox && prefs.tab_layout == 2) {
+        if (isAway) {
+            awayColor = [self.palette getColor:XAColorAwayUser];
+        } else {
+            awayColor = [self.palette getColor:XAColorForeground];
+        }
+    } else {
+        if (isAway) {
+            awayColor = [NSColor grayColor];
+        } else {
+            awayColor = [NSColor textColor];
+        }
+    }
+    if (current_sess) {
+        current_sess->gui->controller.nickTextField.textColor = awayColor;
+    }
 }
 
 - (void) showNetworkWindow:(id)sender
@@ -944,10 +995,8 @@ AquaChat *AquaChatSharedObject;
 
 - (NSDictionary *) registrationDictionaryForGrowl
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSArray arrayWithObjects:@"X-Chat", nil], GROWL_NOTIFICATIONS_ALL,
-            [NSArray arrayWithObjects:@"X-Chat", nil], GROWL_NOTIFICATIONS_DEFAULT,
-            nil];
+    return @{GROWL_NOTIFICATIONS_ALL: @[@"X-Chat"],
+            GROWL_NOTIFICATIONS_DEFAULT: @[@"X-Chat"]};
 }
 
 - (BOOL)hasNetworkClientEntitlement {
@@ -972,9 +1021,9 @@ AquaChat *AquaChatSharedObject;
         struct XATextEventItem *event = &XATextEvents[i];
         char *name = te[i].name;
         
-        event->growl = [[dict objectForKey:[NSString stringWithFormat:@"%s_growl", name]] integerValue];
-        event->show = [[dict objectForKey:[NSString stringWithFormat:@"%s_show", name]] integerValue];
-        event->bounce = [[dict objectForKey:[NSString stringWithFormat:@"%s_bounce", name]] integerValue];
+        event->growl = [dict[[NSString stringWithFormat:@"%s_growl", name]] integerValue];
+        event->show = [dict[[NSString stringWithFormat:@"%s_show", name]] integerValue];
+        event->bounce = [dict[[NSString stringWithFormat:@"%s_bounce", name]] integerValue];
     }
 }
 
@@ -988,15 +1037,15 @@ AquaChat *AquaChatSharedObject;
         
         if (event->growl)
         {
-            [dict setObject:[NSNumber numberWithInteger:event->growl] forKey:[NSString stringWithFormat:@"%s_growl", name]];
+            dict[[NSString stringWithFormat:@"%s_growl", name]] = @(event->growl);
         }
         if (event->show)
         {
-            [dict setObject:[NSNumber numberWithInteger:event->show] forKey:[NSString stringWithFormat:@"%s_show", name]];
+            dict[[NSString stringWithFormat:@"%s_show", name]] = @(event->show);
         }
         if (event->bounce)
         {
-            [dict setObject:[NSNumber numberWithInteger:event->bounce] forKey:[NSString stringWithFormat:@"%s_bounce", name]];
+            dict[[NSString stringWithFormat:@"%s_bounce", name]] = @(event->bounce);
         }
         
     }
@@ -1015,10 +1064,10 @@ AquaChat *AquaChatSharedObject;
 
 - (void) updateUsermenu
 {
-    while ([userMenu numberOfItems] > 2)
-        [userMenu removeItemAtIndex:2];
+    while ([self.userMenu numberOfItems] > 2)
+        [self.userMenu removeItemAtIndex:2];
     
-    [[MenuMaker defaultMenuMaker] appendItemList:usermenu_list toMenu:userMenu withTarget:nil inSession:NULL];
+    [[MenuMaker defaultMenuMaker] appendItemList:usermenu_list toMenu:self.userMenu withTarget:nil inSession:NULL];
 }
 
 - (void) loadMenuPreferences
@@ -1026,13 +1075,13 @@ AquaChat *AquaChatSharedObject;
     struct XAMenuPreferenceItem tempPreferences [] =
     {
         // IRC menu
-        { invisibleMenuItem, &prefs.invisible, NO },
-        { receiveNoticesMenuItem, &prefs.servernotice, NO },
-        { receiveWallopsMenuItem, &prefs.wallops, NO },
+        { self.invisibleMenuItem, &prefs.invisible, NO },
+        { self.receiveNoticesMenuItem, &prefs.servernotice, NO },
+        { self.receiveWallopsMenuItem, &prefs.wallops, NO },
         // View menu
-        { userListMenuItem,  &prefs.hideuserlist, YES },
-        { userlistButtonsMenuItem, &prefs.userlistbuttons, NO },
-        { modeButtonsMenuItem, &prefs.chanmodebuttons, NO },
+        { self.userListMenuItem,  &prefs.hideuserlist, YES },
+        { self.userlistButtonsMenuItem, &prefs.userlistbuttons, NO },
+        { self.modeButtonsMenuItem, &prefs.chanmodebuttons, NO },
     };
     
     for (NSUInteger i = 0; i < sizeof(menuPreferenceItems) / sizeof(menuPreferenceItems[0]); i ++)

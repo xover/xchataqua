@@ -15,7 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA */
 
-#import <objc/runtime.h>
 #import "SGView.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -48,7 +47,7 @@
 #if 1
         [[NSRunLoop currentRunLoop] performSelector:@selector (do_layouts)
             target:self argument:nil order:0
-            modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
+            modes:@[NSDefaultRunLoopMode]];
 #else
         [NSApp addAfterEvent:self sel:@selector (do_layouts)];
 #endif
@@ -178,14 +177,16 @@
 
 + (void) initialize
 {
-    // swap original -setHidden: to new one
-    Method originalMethod = class_getInstanceMethod([NSView class], @selector(setHidden:));
-    Method overrideMethod = class_getInstanceMethod([NSView class], @selector(setSGHidden:));
-    IMP originalImplementation = method_getImplementation(originalMethod);
-    IMP overrideImplementation = method_getImplementation(overrideMethod);
-    if ( originalImplementation != overrideImplementation ) {
-        method_setImplementation(class_getInstanceMethod([NSView class], @selector(setOriginalHidden:)), originalImplementation);
-        method_setImplementation(originalMethod, overrideImplementation);
+    if (self == [SGView class]) {
+        NSAMethod *mHidden = [[NSView classObject] methodObjectForSelector:@selector(setHidden:)];
+        NSAMethod *mSGHidden = [[NSView classObject] methodObjectForSelector:@selector(setSGHidden:)];
+        NSAMethod *mOriginalHidden = [[NSView classObject] methodObjectForSelector:@selector(setOriginalHidden:)];
+
+        // move original -setHidden: to new one
+        if (mHidden.implementation != mSGHidden.implementation) {
+            mOriginalHidden.implementation = mHidden.implementation;
+            mHidden.implementation = mSGHidden.implementation;
+        }
     }
 }
 
@@ -319,7 +320,7 @@ static void noDisplay (NSView *v)
     NSUInteger i = [self viewOrder:the_view];
     if (i == NSNotFound)
         return nil;
-    return [metaViews objectAtIndex:i];
+    return metaViews[i];
 }
 
 - (void) setOrder:(NSUInteger)order forView:(NSView *) the_view
@@ -327,7 +328,7 @@ static void noDisplay (NSView *v)
     NSUInteger i = [self viewOrder:the_view];
     if (i == NSNotFound)
         return;
-    id metaview = [metaViews objectAtIndex:i];
+    id metaview = metaViews[i];
     [metaview retain];
     [metaViews removeObjectAtIndex:i];
     if (order > [metaViews count])
@@ -342,7 +343,7 @@ static void noDisplay (NSView *v)
 {
     for (NSUInteger i = 0; i < [metaViews count]; i ++)
     {
-        id metaView = [metaViews objectAtIndex:i];
+        id metaView = metaViews[i];
         if ([metaView view] == the_view)
             return i;
     }

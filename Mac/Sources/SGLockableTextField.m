@@ -112,8 +112,7 @@
     [super setEditable:(isEditable && ![self isLocked])];
 }
 
-- (void) computeTextFrame:(NSRect *) textFrame andLockFrame:(NSRect *) lockFrame fromCellFrame:(NSRect) aRect
-{
+- (void)computeTextFrame:(NSRect *)textFrame andLockFrame:(NSRect *)lockFrame fromCellFrame:(NSRect)aRect {
     if (!lockCell)
     {
         *textFrame = aRect;
@@ -134,7 +133,7 @@
     return [super drawingRectForBounds:textFrame];
 }
 
-- (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView 
+- (void) drawWithFrame:(NSRect)cellFrame inView:(NSView *) controlView
 {
     NSRect textFrame, lockFrame;
     [self computeTextFrame:&textFrame andLockFrame:&lockFrame fromCellFrame:cellFrame];
@@ -191,7 +190,7 @@
     [cell setFont:[self font]];
     [cell setScrollable:YES];
     [cell setPlaceholderString:
-     [NSString stringWithFormat:@"(%@)", NSLocalizedStringFromTable(@"Topic is not set", @"xchataqua", @"Blank title on channel")]];;
+     [@"(%@)" format:NSLocalizedStringFromTable(@"Topic is not set", @"xchataqua", @"Blank title on channel")]];
     [self setCell:cell];
     [cell release];
     [self calcSize];

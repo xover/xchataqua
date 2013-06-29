@@ -22,8 +22,7 @@
 @class ChatSplitView;
 @class UserListTableView;
 
-@interface ChatViewController : NSViewController
-<XAEventChain,NSTextViewDelegate,NSTextFieldDelegate,NSTableViewDataSource,NSTableViewDelegate,NSSplitViewDelegate>
+@interface ChatViewController: NSViewController<XAEventChain, NSTextViewDelegate, NSTextFieldDelegate, NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate>
 {
     IBOutlet XAChatTextView     *chatTextView;
     IBOutlet NSView             *inputContainerView;
@@ -68,9 +67,14 @@
 @property (nonatomic, assign)   NSString *inputText;
 @property (nonatomic, readonly) NSWindow *window;
 @property (nonatomic, readonly) struct session *session;
-@property (nonatomic, retain)   NSButton *tButton, *nButton, *sButton, *iButton, *pButton, *mButton,
-                                         *bButton, *lButton, *kButton, *CButton, *NButton, *uButton;
-@property (nonatomic, retain)   NSTextField *limitTextField, *keyTextField;
+@property (nonatomic, retain) NSButton *tButton, *sButton, *iButton, *pButton, *mButton,
+                                       *bButton, *lButton, *kButton, *CButton, *uButton;
+@property (nonatomic, retain, setter=setnButton:) NSButton *nButton;
+@property (nonatomic, retain, setter=setNButton:) NSButton *NButton;
+@property (nonatomic, retain) NSTextField *limitTextField, *keyTextField;
+@property (nonatomic, retain) NSTextField *nickTextField;
+
+@property (nonatomic, assign, getter=isScrollingBack) BOOL scrollingBack;
 
 - (IBAction) doMircColor:(id)sender;
 - (IBAction)toggleConferenceMode:(id)sender;

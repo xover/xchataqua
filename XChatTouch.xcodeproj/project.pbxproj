@@ -49,9 +49,7 @@
 
 /* Begin PBXBuildFile section */
 		0F8EA68D0CFB300B001AE9AE /* SGFileDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6650CFB300B001AE9AE /* SGFileDescriptor.m */; };
-		0F8EA68F0CFB300B001AE9AE /* SGFileUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6690CFB300B001AE9AE /* SGFileUtility.m */; };
 		0F8EA6940CFB300B001AE9AE /* SGRegex.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6730CFB300B001AE9AE /* SGRegex.m */; };
-		0F8EA6970CFB300B001AE9AE /* SGSoundUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6790CFB300B001AE9AE /* SGSoundUtility.m */; };
 		0F8EA6E70CFB347B001AE9AE /* GLikeTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6C00CFB347B001AE9AE /* GLikeTimer.m */; };
 		0F8EA6ED0CFB347B001AE9AE /* XACommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA6CA0CFB347B001AE9AE /* XACommon.m */; };
 		0F8EA7580CFB6BB7001AE9AE /* blue.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 0F8EA74B0CFB6BB7001AE9AE /* blue.tiff */; };
@@ -60,7 +58,7 @@
 		0F8EA78D0CFB6C9A001AE9AE /* red.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 0F8EA77D0CFB6C9A001AE9AE /* red.tiff */; };
 		0FC8F5C40DEEEA3E00504F31 /* libxchat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC8F4AE0DEEE51700504F31 /* libxchat.a */; };
 		0FC8F6ED0DEEF64200504F31 /* fe-iphone.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8EA3CE0CFAF7E2001AE9AE /* fe-iphone.m */; };
-		2D7817CA10E872D200C71AF8 /* fe-aqua_utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7817C910E872D200C71AF8 /* fe-aqua_utility.m */; };
+		2D7817CA10E872D200C71AF8 /* fe-iphone_utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7817C910E872D200C71AF8 /* fe-iphone_utility.m */; };
 		381297D513CACC7500AE8746 /* cfgfiles.c in Sources */ = {isa = PBXBuildFile; fileRef = 381297CC13CACC6D00AE8746 /* cfgfiles.c */; };
 		381297D613CACC7500AE8746 /* cfgfiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 381297CD13CACC6D00AE8746 /* cfgfiles.h */; };
 		381297D713CACC7500AE8746 /* chanopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 381297CE13CACC6D00AE8746 /* chanopt.c */; };
@@ -302,10 +300,12 @@
 		389DC30D15550990003BA8D9 /* libcharset.h in Headers */ = {isa = PBXBuildFile; fileRef = 389DC0BE1555098E003BA8D9 /* libcharset.h */; };
 		389DC30F15550990003BA8D9 /* localcharset.h in Headers */ = {isa = PBXBuildFile; fileRef = 389DC0C01555098E003BA8D9 /* localcharset.h */; };
 		389DC3741555099E003BA8D9 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 389DC3731555099E003BA8D9 /* config.h */; };
-		389DC37515550BEA003BA8D9 /* libglib2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CBF12A12B96A6400B4E35E /* libglib2.a */; };
 		389DC37715550C12003BA8D9 /* localcharset.c in Sources */ = {isa = PBXBuildFile; fileRef = 389DC0BF1555098E003BA8D9 /* localcharset.c */; };
 		389DC37815551291003BA8D9 /* genviron.c in Sources */ = {isa = PBXBuildFile; fileRef = 389DBFEC1555098E003BA8D9 /* genviron.c */; };
-		38F51868160B32B900224DE4 /* libintl.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F51867160B32B900224DE4 /* libintl.m */; };
+		38D930951725C4DF00BD0938 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D930941725C4DE00BD0938 /* CoreGraphics.framework */; };
+		38D930961725C4FC00BD0938 /* libglib2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CBF12A12B96A6400B4E35E /* libglib2.a */; };
+		38D930981725C57300BD0938 /* gquark.c in Sources */ = {isa = PBXBuildFile; fileRef = 38D930971725C57300BD0938 /* gquark.c */; };
+		38F069681638222D002723AB /* libPods-XChat iPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F069671638222D002723AB /* libPods-XChat iPhone.a */; };
 		38F5186B160B33E900224DE4 /* xchatext.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F5186A160B33E900224DE4 /* xchatext.m */; };
 		38FC927913CADF7E006CB5C8 /* xchat.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38FC91C513CADF7E006CB5C8 /* xchat.strings */; };
 		38FC927A13CADF7E006CB5C8 /* libsg.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38FC91D913CADF7E006CB5C8 /* libsg.strings */; };
@@ -333,7 +333,6 @@
 		D4CBF88E12BAB15500B4E35E /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4CBF88D12BAB15500B4E35E /* ChatViewController.xib */; };
 		D4CBF89B12BAB3D300B4E35E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CBF89A12BAB3D300B4E35E /* MainViewController.m */; };
 		D4CBF93D12BAD5A800B4E35E /* ChatTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CBF93C12BAD5A800B4E35E /* ChatTextView.m */; };
-		D4CBFAD112BB4D4800B4E35E /* SGDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CBFAD012BB4D4800B4E35E /* SGDebug.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -397,14 +396,8 @@
 		0F8EA6590CFB300B001AE9AE /* SG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SG.h; sourceTree = "<group>"; };
 		0F8EA6640CFB300B001AE9AE /* SGFileDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGFileDescriptor.h; sourceTree = "<group>"; };
 		0F8EA6650CFB300B001AE9AE /* SGFileDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGFileDescriptor.m; sourceTree = "<group>"; };
-		0F8EA6680CFB300B001AE9AE /* SGFileUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGFileUtility.h; sourceTree = "<group>"; };
-		0F8EA6690CFB300B001AE9AE /* SGFileUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGFileUtility.m; sourceTree = "<group>"; };
 		0F8EA6720CFB300B001AE9AE /* SGRegex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGRegex.h; sourceTree = "<group>"; };
 		0F8EA6730CFB300B001AE9AE /* SGRegex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGRegex.m; sourceTree = "<group>"; };
-		0F8EA6780CFB300B001AE9AE /* SGSoundUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSoundUtility.h; sourceTree = "<group>"; };
-		0F8EA6790CFB300B001AE9AE /* SGSoundUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGSoundUtility.m; sourceTree = "<group>"; };
-		0F8EA67E0CFB300B001AE9AE /* SGTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGTokenizer.h; sourceTree = "<group>"; };
-		0F8EA67F0CFB300B001AE9AE /* SGTokenizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGTokenizer.m; sourceTree = "<group>"; };
 		0F8EA6B40CFB33AF001AE9AE /* AutoAwayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoAwayController.h; sourceTree = "<group>"; };
 		0F8EA6B50CFB33AF001AE9AE /* AutoAwayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoAwayController.m; sourceTree = "<group>"; };
 		0F8EA6B70CFB33C9001AE9AE /* ColorPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorPalette.h; sourceTree = "<group>"; };
@@ -426,8 +419,8 @@
 		0FC8F4AE0DEEE51700504F31 /* libxchat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxchat.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		2D6D421E121E85470082F2EF /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
-		2D7817C810E872D200C71AF8 /* fe-aqua_utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fe-aqua_utility.h"; sourceTree = "<group>"; };
-		2D7817C910E872D200C71AF8 /* fe-aqua_utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fe-aqua_utility.m"; sourceTree = "<group>"; };
+		2D7817C810E872D200C71AF8 /* fe-iphone_utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fe-iphone_utility.h"; sourceTree = "<group>"; };
+		2D7817C910E872D200C71AF8 /* fe-iphone_utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "fe-iphone_utility.m"; sourceTree = "<group>"; };
 		2DDC6FA21231733E0015A26C /* build_number.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = build_number.h; sourceTree = "<group>"; };
 		381297CC13CACC6D00AE8746 /* cfgfiles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cfgfiles.c; sourceTree = "<group>"; };
 		381297CD13CACC6D00AE8746 /* cfgfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cfgfiles.h; sourceTree = "<group>"; };
@@ -462,7 +455,7 @@
 		381297FE13CACCBC00AE8746 /* proto-irc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "proto-irc.h"; sourceTree = "<group>"; };
 		381297FF13CACCBC00AE8746 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		3812980013CACCBC00AE8746 /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
-		3812980113CACCBC00AE8746 /* servlist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = servlist.c; sourceTree = "<group>"; };
+		3812980113CACCBC00AE8746 /* servlist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = servlist.c; sourceTree = "<group>"; usesTabs = 1; };
 		3812980213CACCBC00AE8746 /* servlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = servlist.h; sourceTree = "<group>"; };
 		3812980513CACCBC00AE8746 /* text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = text.c; sourceTree = "<group>"; };
 		3812980613CACCBC00AE8746 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
@@ -690,8 +683,9 @@
 		389DC0BF1555098E003BA8D9 /* localcharset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = localcharset.c; sourceTree = "<group>"; };
 		389DC0C01555098E003BA8D9 /* localcharset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = localcharset.h; sourceTree = "<group>"; };
 		389DC3731555099E003BA8D9 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = glib/config.h; sourceTree = SOURCE_ROOT; };
-		38F51866160B32B900224DE4 /* libintl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libintl.h; sourceTree = "<group>"; };
-		38F51867160B32B900224DE4 /* libintl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = libintl.m; sourceTree = "<group>"; };
+		38D930941725C4DE00BD0938 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		38D930971725C57300BD0938 /* gquark.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gquark.c; sourceTree = "<group>"; };
+		38F069671638222D002723AB /* libPods-XChat iPhone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-XChat iPhone.a"; path = "Pods/build/Release-iphoneos/libPods-XChat iPhone.a"; sourceTree = "<group>"; };
 		38F5186A160B33E900224DE4 /* xchatext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = xchatext.m; sourceTree = "<group>"; };
 		38FC91C613CADF7E006CB5C8 /* am */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = am; path = am.lproj/xchat.strings; sourceTree = "<group>"; };
 		38FC91C713CADF7E006CB5C8 /* az */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = az; path = az.lproj/xchat.strings; sourceTree = "<group>"; };
@@ -741,11 +735,13 @@
 		38FC92AB13CAE23A006CB5C8 /* bundle_loader_plugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = bundle_loader_plugin.m; sourceTree = "<group>"; };
 		38FC92AD13CAE29E006CB5C8 /* SystemVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemVersion.h; sourceTree = "<group>"; };
 		38FC92AE13CAE29E006CB5C8 /* SystemVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemVersion.m; sourceTree = "<group>"; };
+		657690F09216490D90B192F6 /* libPods-XChat iPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XChat iPhone.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D1107320486CEB800E47090 /* X-Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "X-Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07C7AB20F4395E200E11B58 /* BuildNumber.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = BuildNumber.xcconfig; sourceTree = "<group>"; };
 		B07C7AD60F4398FC00E11B58 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		B07C7AD70F4398FC00E11B58 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		D406B462129D789400EF6B2B /* fe-iphone_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fe-iphone_common.h"; sourceTree = "<group>"; };
+		D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XChat iPhone.xcconfig"; path = "Pods/Pods-XChat iPhone.xcconfig"; sourceTree = SOURCE_ROOT; };
 		D49A18AC12BD712F0018AC79 /* RawLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawLogViewController.h; sourceTree = "<group>"; };
 		D49A18AD12BD712F0018AC79 /* RawLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawLogViewController.m; sourceTree = "<group>"; };
 		D49A18C212BD71FB0018AC79 /* RawLogViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RawLogViewController.xib; sourceTree = "<group>"; };
@@ -755,10 +751,10 @@
 		D49A1CB912BDE3870018AC79 /* Icon114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon114.png; path = Resources/Icon114.png; sourceTree = "<group>"; };
 		D49A1CDB12BDE5FA0018AC79 /* UserListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListView.h; sourceTree = "<group>"; };
 		D49A1CDC12BDE5FA0018AC79 /* UserListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListView.m; sourceTree = "<group>"; };
-		D4CBF00912B9657000B4E35E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		D4CBF0A612B96A3500B4E35E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D4CBF00912B9657000B4E35E /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D4CBF0A612B96A3500B4E35E /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D4CBF12A12B96A6400B4E35E /* libglib2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libglib2.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4CBF3BA12B9778000B4E35E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		D4CBF3BA12B9778000B4E35E /* libiconv.dylib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		D4CBF45012B97E8700B4E35E /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../Resources/MainWindow.xib; sourceTree = "<group>"; };
 		D4CBF45912B97F2E00B4E35E /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D4CBF45A12B97F2E00B4E35E /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -774,8 +770,7 @@
 		D4CBF89A12BAB3D300B4E35E /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		D4CBF93B12BAD5A800B4E35E /* ChatTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTextView.h; sourceTree = "<group>"; };
 		D4CBF93C12BAD5A800B4E35E /* ChatTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTextView.m; sourceTree = "<group>"; };
-		D4CBFACF12BB4D4800B4E35E /* SGDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGDebug.h; sourceTree = "<group>"; };
-		D4CBFAD012BB4D4800B4E35E /* SGDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGDebug.m; sourceTree = "<group>"; };
+		FB2B51976C1D4BF0BA7BF295 /* libPods-X-Chat iPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-X-Chat iPhone.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -783,11 +778,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				389DC37515550BEA003BA8D9 /* libglib2.a in Frameworks */,
+				38D930961725C4FC00BD0938 /* libglib2.a in Frameworks */,
 				0FC8F5C40DEEEA3E00504F31 /* libxchat.a in Frameworks */,
+				38D930951725C4DF00BD0938 /* CoreGraphics.framework in Frameworks */,
 				D4CBF0A712B96A3500B4E35E /* Foundation.framework in Frameworks */,
 				D4CBF00A12B9657000B4E35E /* UIKit.framework in Frameworks */,
 				D4CBF3BB12B9778000B4E35E /* libiconv.dylib in Frameworks */,
+				38F069681638222D002723AB /* libPods-XChat iPhone.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,18 +854,10 @@
 			isa = PBXGroup;
 			children = (
 				0F8EA6590CFB300B001AE9AE /* SG.h */,
-				D4CBFACF12BB4D4800B4E35E /* SGDebug.h */,
-				D4CBFAD012BB4D4800B4E35E /* SGDebug.m */,
 				0F8EA6640CFB300B001AE9AE /* SGFileDescriptor.h */,
 				0F8EA6650CFB300B001AE9AE /* SGFileDescriptor.m */,
-				0F8EA6680CFB300B001AE9AE /* SGFileUtility.h */,
-				0F8EA6690CFB300B001AE9AE /* SGFileUtility.m */,
 				0F8EA6720CFB300B001AE9AE /* SGRegex.h */,
 				0F8EA6730CFB300B001AE9AE /* SGRegex.m */,
-				0F8EA6780CFB300B001AE9AE /* SGSoundUtility.h */,
-				0F8EA6790CFB300B001AE9AE /* SGSoundUtility.m */,
-				0F8EA67E0CFB300B001AE9AE /* SGTokenizer.h */,
-				0F8EA67F0CFB300B001AE9AE /* SGTokenizer.m */,
 			);
 			path = SGLibrary;
 			sourceTree = "<group>";
@@ -903,6 +892,8 @@
 		29B97314FDCFA39411CA2CEA /* X-Chat Aqua */ = {
 			isa = PBXGroup;
 			children = (
+				38D930941725C4DE00BD0938 /* CoreGraphics.framework */,
+				38F069671638222D002723AB /* libPods-XChat iPhone.a */,
 				2DC6ACE6118776D40048B7C7 /* Sources */,
 				2DC6AD151187773F0048B7C7 /* Resources */,
 				0F8EA6580CFB2F71001AE9AE /* SGLibrary */,
@@ -913,6 +904,7 @@
 				B07C7AB20F4395E200E11B58 /* BuildNumber.xcconfig */,
 				B07C7AD60F4398FC00E11B58 /* Debug.xcconfig */,
 				B07C7AD70F4398FC00E11B58 /* Release.xcconfig */,
+				D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */,
 				0F8EA3660CFAA49B001AE9AE /* Info.plist */,
 				D4CBF0A612B96A3500B4E35E /* Foundation.framework */,
 				D4CBF3BA12B9778000B4E35E /* libiconv.dylib */,
@@ -926,6 +918,8 @@
 			children = (
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				FB2B51976C1D4BF0BA7BF295 /* libPods-X-Chat iPhone.a */,
+				657690F09216490D90B192F6 /* libPods-XChat iPhone.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -939,8 +933,8 @@
 				381297CB13CACB9000AE8746 /* Utility Windows */,
 				D406B462129D789400EF6B2B /* fe-iphone_common.h */,
 				0F8EA3CE0CFAF7E2001AE9AE /* fe-iphone.m */,
-				2D7817C810E872D200C71AF8 /* fe-aqua_utility.h */,
-				2D7817C910E872D200C71AF8 /* fe-aqua_utility.m */,
+				2D7817C810E872D200C71AF8 /* fe-iphone_utility.h */,
+				2D7817C910E872D200C71AF8 /* fe-iphone_utility.m */,
 				D4CBF45912B97F2E00B4E35E /* AppDelegate.h */,
 				D4CBF45A12B97F2E00B4E35E /* AppDelegate.m */,
 				D4CBF89912BAB3D300B4E35E /* MainViewController.h */,
@@ -1013,15 +1007,6 @@
 				D49A18C212BD71FB0018AC79 /* RawLogViewController.xib */,
 			);
 			name = "Utility Windows";
-			sourceTree = "<group>";
-		};
-		389DBED1155507A8003BA8D9 /* gettext */ = {
-			isa = PBXGroup;
-			children = (
-				38F51866160B32B900224DE4 /* libintl.h */,
-				38F51867160B32B900224DE4 /* libintl.m */,
-			);
-			path = gettext;
 			sourceTree = "<group>";
 		};
 		389DBF5515550971003BA8D9 /* glib */ = {
@@ -1144,6 +1129,7 @@
 				389DC05B1555098E003BA8D9 /* gprintfint.h */,
 				389DC05C1555098E003BA8D9 /* gqsort.c */,
 				389DC05D1555098E003BA8D9 /* gqsort.h */,
+				38D930971725C57300BD0938 /* gquark.c */,
 				389DC05E1555098E003BA8D9 /* gquark.h */,
 				389DC05F1555098E003BA8D9 /* gqueue.c */,
 				389DC0601555098E003BA8D9 /* gqueue.h */,
@@ -1285,7 +1271,6 @@
 		38F51869160B331D00224DE4 /* staticlib */ = {
 			isa = PBXGroup;
 			children = (
-				389DBED1155507A8003BA8D9 /* gettext */,
 				389DBF5515550971003BA8D9 /* glib */,
 				0F8EA3160CFAA342001AE9AE /* xchat */,
 			);
@@ -1494,21 +1479,22 @@
 			productReference = 0FC8F4AE0DEEE51700504F31 /* libxchat.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		8D1107260486CEB800E47090 /* X-Chat iPhone */ = {
+		8D1107260486CEB800E47090 /* XChat iPhone */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "X-Chat iPhone" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "XChat iPhone" */;
 			buildPhases = (
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D1107290486CEB800E47090 /* Resources */,
 				0F8EA7C40CFB6EC9001AE9AE /* Copy Frameworks */,
+				0301C87908B940649BC1D167 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				0FC8F5C30DEEEA3B00504F31 /* PBXTargetDependency */,
 			);
-			name = "X-Chat iPhone";
+			name = "XChat iPhone";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "X-Chat Aqua";
 			productReference = 8D1107320486CEB800E47090 /* X-Chat.app */;
@@ -1597,7 +1583,7 @@
 			targets = (
 				0F7065690E1FA5C100FEA21C /* Release */,
 				2DDC6FD91231BCA00015A26C /* Prebuild */,
-				8D1107260486CEB800E47090 /* X-Chat iPhone */,
+				8D1107260486CEB800E47090 /* XChat iPhone */,
 				D4CBF10D12B96A6400B4E35E /* glib */,
 				0FC8F4AD0DEEE51700504F31 /* xchat */,
 				2DDC70011231DA230015A26C /* printenv */,
@@ -1632,6 +1618,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0301C87908B940649BC1D167 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-XChat iPhone-resources.sh\"\n";
+		};
 		2DDC6FEA1231BD760015A26C /* Generate Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1725,27 +1725,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F8EA68D0CFB300B001AE9AE /* SGFileDescriptor.m in Sources */,
-				0F8EA68F0CFB300B001AE9AE /* SGFileUtility.m in Sources */,
 				0F8EA6940CFB300B001AE9AE /* SGRegex.m in Sources */,
-				0F8EA6970CFB300B001AE9AE /* SGSoundUtility.m in Sources */,
 				0F8EA6E70CFB347B001AE9AE /* GLikeTimer.m in Sources */,
 				0F8EA6ED0CFB347B001AE9AE /* XACommon.m in Sources */,
 				0FC8F6ED0DEEF64200504F31 /* fe-iphone.m in Sources */,
-				2D7817CA10E872D200C71AF8 /* fe-aqua_utility.m in Sources */,
+				2D7817CA10E872D200C71AF8 /* fe-iphone_utility.m in Sources */,
 				D4CBF45B12B97F2E00B4E35E /* AppDelegate.m in Sources */,
 				D4CBF48912B9824B00B4E35E /* NetworkViewController.m in Sources */,
 				D4CBF49E12B9845500B4E35E /* UtilityViewController.m in Sources */,
 				D4CBF88C12BAB14900B4E35E /* ChatViewController.m in Sources */,
 				D4CBF89B12BAB3D300B4E35E /* MainViewController.m in Sources */,
 				D4CBF93D12BAD5A800B4E35E /* ChatTextView.m in Sources */,
-				D4CBFAD112BB4D4800B4E35E /* SGDebug.m in Sources */,
 				D49A18AE12BD712F0018AC79 /* RawLogViewController.m in Sources */,
 				D49A1C3812BDD8F80018AC79 /* ColorPalette.m in Sources */,
 				D49A1CDD12BDE5FA0018AC79 /* UserListView.m in Sources */,
 				D490452012CF67C5007D9843 /* mIRCString.m in Sources */,
 				38FC92AC13CAE23A006CB5C8 /* bundle_loader_plugin.m in Sources */,
 				38FC92AF13CAE29E006CB5C8 /* SystemVersion.m in Sources */,
-				38F51868160B32B900224DE4 /* libintl.m in Sources */,
 				38F5186B160B33E900224DE4 /* xchatext.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1838,6 +1834,7 @@
 				389DC30815550990003BA8D9 /* gwakeup.c in Sources */,
 				389DC37715550C12003BA8D9 /* localcharset.c in Sources */,
 				389DC37815551291003BA8D9 /* genviron.c in Sources */,
+				38D930981725C57300BD0938 /* gquark.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1846,7 +1843,7 @@
 /* Begin PBXTargetDependency section */
 		0F70656D0E1FA5C700FEA21C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* X-Chat iPhone */;
+			target = 8D1107260486CEB800E47090 /* XChat iPhone */;
 			targetProxy = 0F70656C0E1FA5C700FEA21C /* PBXContainerItemProxy */;
 		};
 		0FC8F5C30DEEEA3B00504F31 /* PBXTargetDependency */ = {
@@ -1951,17 +1948,16 @@
 		};
 		0FC8F4AF0DEEE51700504F31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = (
-					.,
-					xchat/src/common,
-					"$(TARGET_PLATFORM)",
+					"${PODS_HEADERS_SEARCH_PATHS}",
 					glib,
-					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				OTHER_CFLAGS = (
 					"-w",
@@ -1976,15 +1972,14 @@
 		};
 		0FC8F4B00DEEE51700504F31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				HEADER_SEARCH_PATHS = (
-					.,
-					xchat/src/common,
-					"$(TARGET_PLATFORM)",
+					"${PODS_HEADERS_SEARCH_PATHS}",
 					glib,
-					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				OTHER_CFLAGS = (
 					"-w",
@@ -2027,25 +2022,41 @@
 		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iOS/Sources/Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"${PODS_HEADERS_SEARCH_PATHS}",
+					.,
+					glib,
+					"$(PODS_ROOT)/libintl-alternative",
+				);
 				INFOPLIST_FILE = "$(TARGET_PLATFORM)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				LIBRARY_SEARCH_PATHS = "Pods/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				PRODUCT_NAME = "X-Chat";
 			};
 			name = Debug;
 		};
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iOS/Sources/Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"${PODS_HEADERS_SEARCH_PATHS}",
+					.,
+					glib,
+					"$(PODS_ROOT)/libintl-alternative",
+				);
 				INFOPLIST_FILE = "$(TARGET_PLATFORM)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				LIBRARY_SEARCH_PATHS = "Pods/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				PRODUCT_NAME = "X-Chat";
 			};
 			name = Release;
@@ -2070,7 +2081,7 @@
 					xchat/src/common,
 					"$(TARGET_PLATFORM)",
 					glib,
-					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -2096,7 +2107,7 @@
 					xchat/src/common,
 					"$(TARGET_PLATFORM)",
 					glib,
-					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -2108,6 +2119,7 @@
 		};
 		D4CBF12812B96A6400B4E35E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2120,6 +2132,7 @@
 				HEADER_SEARCH_PATHS = (
 					glib,
 					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				OTHER_CFLAGS = (
 					"-w",
@@ -2134,6 +2147,7 @@
 		};
 		D4CBF12912B96A6400B4E35E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D489054E4B084C608D425CDC /* Pods-XChat iPhone.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -2144,6 +2158,7 @@
 				HEADER_SEARCH_PATHS = (
 					glib,
 					gettext,
+					"$(PODS_ROOT)/libintl-alternative",
 				);
 				OTHER_CFLAGS = (
 					"-w",
@@ -2195,7 +2210,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "X-Chat iPhone" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "XChat iPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,

@@ -13,8 +13,9 @@
 NSMutableDictionary *utilityViewControllers;
 
 NSString *fullKey(NSString *key, struct session *sess) {
-	if ( sess != NULL )
-		key = [key stringByAppendingFormat:@"_%x", sess];
+	if ( sess != NULL ) {
+		key = [key stringByAppendingFormat:@"_%x", (int)sess];
+    }
 	return key;
 }
 
@@ -37,7 +38,7 @@ NSString *fullKey(NSString *key, struct session *sess) {
 }
 
 + (UtilityViewController *)viewControllerByKey:(NSString *)key forSession:(struct session *)session {
-	return [utilityViewControllers objectForKey:fullKey(key, session)];
+	return utilityViewControllers[fullKey(key, session)];
 }
 
 + (UtilityViewController *) viewControllerWithNibName:(NSString *)nibName key:(NSString *)key forSession:(struct session *)session {
@@ -46,13 +47,13 @@ NSString *fullKey(NSString *key, struct session *sess) {
 		viewController = [[self alloc] initWithNibName:nibName bundle:nil];
 		viewController->utilityKey = [key retain];
 		viewController->session = session;
-		[utilityViewControllers setObject:viewController forKey:fullKey(key, session)];
+		utilityViewControllers[fullKey(key, session)] = viewController;
 		[viewController release];
 	}
 	return viewController;
 }
 
-+ (NSString *) nibName { /*SGAssert(NO);*/ return @""; }
++ (NSString *) nibName { /*dassert(NO);*/ return @""; }
 + (NSString *) mainKey { return [self nibName]; }
 
 + (id) viewControllerForSession:(struct session *)session {

@@ -52,7 +52,7 @@
 
 static int do_add_url (const void *key, void *cbd)
 {
-    [(UrlGrabberWindow *)cbd addUrl:[NSString stringWithUTF8String:(const char *)key]];
+    [(UrlGrabberWindow *)cbd addUrl:@((const char *)key)];
     return true;
 }
 
@@ -82,11 +82,11 @@ static int do_add_url (const void *key, void *cbd)
     if (urlIndex < 0) return;
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-    NSString *url = [urls objectAtIndex:urlIndex];
+    NSString *url = urls[urlIndex];
     NSString *menuTitle = url;
     // TODO: encode 'url' like menu_urlmenu??
     if ([url length] > 50)
-        menuTitle = [NSString stringWithFormat:@"%@...", [url substringWithRange:NSMakeRange (0, 45)]];
+        menuTitle = [@"%@..." format:[url substringWithRange:NSMakeRange (0, 45)]];
     NSMenuItem *item = [menu addItemWithTitle:menuTitle action:nil keyEquivalent:@""];
     [item setEnabled:NO];
     [[MenuMaker defaultMenuMaker] appendItemList:urlhandler_list toMenu:menu withTarget:url inSession:NULL];
@@ -121,7 +121,7 @@ static int do_add_url (const void *key, void *cbd)
 
 - (id) tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    return [urls objectAtIndex:rowIndex];
+    return urls[rowIndex];
 }
 
 @end

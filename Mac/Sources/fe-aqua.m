@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA */
 
 
-#import <Carbon/Carbon.h>
-
 #undef TYPE_BOOL
 #include "cfgfiles.h"
 #include "util.h"
@@ -32,6 +30,7 @@
 #import "BanWindow.h"
 #import "RawLogWindow.h"
 #import "MenuMaker.h"
+#import "XAFileUtil.h"
 
 #import "UtilityWindow.h"
 
@@ -48,13 +47,19 @@ static void init_plugins_once()
     static bool done;
     if (done)
         return;
-    
-    NSString *supportDirectory = [SGFileUtility findApplicationSupportFor:@PRODUCT_NAME];
-    NSString *cmd = [NSString stringWithFormat:@"mkdir '%@'", [supportDirectory stringByAppendingPathComponent:@"plugins"]];
-    system(cmd.UTF8String);
-        
-    plugin_add (current_sess, NULL, NULL, (void *) XAInitInternalPlugin, NULL, NULL, FALSE);
-    
+
+    NSError *err;
+    BOOL result = [XAFileUtil createSupportFolderFor:@PRODUCT_NAME named:@"plugins" error:&err];
+
+    // If create… returns anything except YES, the directory does not exist
+    // and could not be created; and the reason is in &err.
+    if (result == YES) {
+        plugin_add(current_sess, NULL, NULL, (void *) XAInitInternalPlugin, NULL, NULL, FALSE);
+    } else {
+        NSLog(@"Plugin directory does not exist and could not be created: %@", [err localizedDescription]);
+        [NSApp presentError:err]; // FIXME: Should we terminate here?
+    }
+
     done = true;
 }
 
@@ -78,15 +83,23 @@ fe_new_window (struct session *sess, int focus)
 }
 
 void
-fe_print_text (struct session *sess, char *text, time_t stamp)
+fe_print_text (struct session *sess, const char *text, time_t stamp)
 {
-    NSString *string = [NSString stringWithUTF8String:text];
+    NSString *string = @(text);
     if ( string == nil ) return;
     [sess->gui->controller printText:string stamp:stamp];
 }
 
+void fe_scrollback_start(struct session *sess) {
+    [sess->gui->controller setScrollingBack:YES];
+}
+
+void fe_scrollback_end(struct session *sess) {
+    [sess->gui->controller setScrollingBack:NO];
+}
+
 void
-fe_timeout_remove (int tag)
+fe_timeout_remove (long tag)
 {
 #if USE_GLIKE_TIMER
     [GLikeTimer removeTimerWithTag:tag];
@@ -95,14 +108,14 @@ fe_timeout_remove (int tag)
 #endif
 }
 
-int
-fe_timeout_add (int interval, void *callback, void *userdata)
+long
+fe_timeout_add (long interval, void *callback, void *userdata)
 {
 #if USE_GLIKE_TIMER
-    return [GLikeTimer addTaggedTimerWithMSInterval:interval callback:(GSourceFunc)callback userData:userdata];
+    return [GLikeTimer addTaggedTimerWithMSInterval:interval callback:callback userData:userdata];
 #else
     TimerThing *timer = [TimerThing timerWithInterval:interval
-                                             callback:(timer_callback)callback userdata:userdata];
+                                             callback:callback userdata:userdata];
     
     [timer schedule];
     
@@ -117,7 +130,7 @@ fe_idle_add (void *func, void *data)
 }
 
 void
-fe_input_remove (int tag)
+fe_input_remove (long tag)
 {
     InputThing *thing = [InputThing inputForTag:tag];
     [thing disable];
@@ -125,9 +138,9 @@ fe_input_remove (int tag)
 }
 
 int
-fe_input_add (int sok, int flags, void *func, void *data)
+fe_input_add (int sok, int flags, input_callback func, void *data)
 {
-    InputThing *thing = [InputThing inputWithSocketFD:sok flags:flags callback:(socket_callback)func data:data]; 
+    InputThing *thing = [InputThing inputWithSocketFD:sok flags:flags callback:func data:data]; 
     return [thing tag];
 }
 
@@ -152,61 +165,99 @@ fe_input_add (int sok, int flags, void *func, void *data)
 
 static void setupAppSupport ()
 {
-    NSString *asdir = [SGFileUtility findApplicationSupportFor:@PRODUCT_NAME];
-    NSString *xcdir = [NSString stringWithUTF8String:get_xdir_utf8()];
-    
-    if ([asdir isEqualToString:xcdir]) {
-        NSFileManager *manager = [NSFileManager defaultManager];
-        BOOL isDirectory;
-        BOOL exist = [manager fileExistsAtPath:asdir isDirectory:&isDirectory];
-        if (!exist) {
-            [manager createDirectoryAtPath:asdir withIntermediateDirectories:YES attributes:nil error:NULL];
+    // FIXME: asdir and xcdir will always be identical; so this is bugged.
+    // It's literally the same code implementing both.
+    NSURL *asdir = [XAFileUtil findSupportFolderFor:@PRODUCT_NAME];
+    NSURL *xcdir = [NSURL fileURLWithPath:@(get_xdir_utf8()) isDirectory:YES];
+
+    if ([asdir isEqual:xcdir]) {
+        NSError *err;
+        BOOL result = [XAFileUtil createSupportFolderFor:@PRODUCT_NAME error:&err];
+
+        // If create… returns anything except YES, the directory does not exist
+        // and could not be created; and the reason is in &err.
+        if (!result) {
+            NSLog(@"Support directory does not exist and could not be created: %@", [err localizedDescription]);
+            [NSApp presentError:err]; // FIXME: Should we terminate here?
         }
     } else {
-        bool xclink_exists = [SGFileUtility isSymLink:xcdir];
-        bool xcdir_exists = [SGFileUtility isDirectory:xcdir];
-        bool asdir_exists = [SGFileUtility isDirectory:asdir];
-        
+        bool xclink_exists = [XAFileUtil isSymLink:xcdir];
+        bool xcdir_exists  = [XAFileUtil isDirectory:xcdir];
+        bool asdir_exists  = [XAFileUtil isDirectory:asdir];
+
         // State 1
-        if (xcdir_exists && asdir_exists)
-        {
-            NSLog(@"~/.xchat2 and ApplicationSupport/XChat Azure!?");
+        if (xcdir_exists && asdir_exists) {
+            NSLog(@"Both ~/.xchat2 and Application Support/XChat Azure/ exist!?");
             return;
         }
         
         // State 2
-        if (xcdir_exists && !asdir_exists)
-        {
-            rename (get_xdir_utf8 (), [asdir fileSystemRepresentation]);
-            #ifdef CONFIG_Aqua
-            symlink ([asdir fileSystemRepresentation], get_xdir_utf8 ());
-            #endif
+        if (xcdir_exists && !asdir_exists) {
+            // Move ~/.xchat2 to our Application Support folder
+            // FIXME: We really should check for errors here
+            [[NSFileManager defaultManager] moveItemAtURL:xcdir toURL:asdir error:nil];
+
+#ifdef CONFIG_Aqua
+            NSError *err;
+            BOOL result = [[NSFileManager defaultManager] createSymbolicLinkAtPath:xcdir
+                                                                withDestinationURL:asdir
+                                                                             error:&err];
+            if (!result) {
+                NSLog(@"createSymbolicLinkAtURL:%@ failed: %@", xcdir, err);
+            }
+#endif
             return;
         }
         
         // State 3
-        if (!xclink_exists && !xcdir_exists && asdir_exists)
-        {
-            #ifdef CONFIG_Aqua
-            symlink ([asdir fileSystemRepresentation], get_xdir_utf8 ());
-            #endif
+        if (!xclink_exists && !xcdir_exists && asdir_exists) {
+#ifdef CONFIG_Aqua
+            NSError *err;
+            BOOL result = [[NSFileManager defaultManager] createSymbolicLinkAtPath:xcdir
+                                                                withDestinationURL:asdir
+                                                                             error:&err];
+            if (!result) {
+                NSLog(@"createSymbolicLinkAtURL:%@ failed: %@", xcdir, err);
+            }
+#endif
             return;
         }
         
         // State 4
-        if (!xclink_exists && !xcdir_exists && !asdir_exists)
-        {
-            mkdir ([asdir fileSystemRepresentation], 0755);
-            #ifdef CONFIG_Aqua
-            symlink ([asdir fileSystemRepresentation], get_xdir_utf8 ());
-            #endif
+        if (!xclink_exists && !xcdir_exists && !asdir_exists) {
+            NSError *asdir_err;
+            BOOL asdir_result = [XAFileUtil createSupportFolderFor:@PRODUCT_NAME error:&asdir_err];
+
+            // If create… returns anything except YES, the directory does not exist
+            // and could not be created; and the reason is in &err.
+            if (!asdir_result) {
+                NSLog(@"Support directory does not exist and could not be created: %@", [asdir_err localizedDescription]);
+                [NSApp presentError:asdir_err]; // FIXME: Should we terminate here?
+            }
+
+#ifdef CONFIG_Aqua
+            NSError *symlink_err;
+            BOOL symlink_result = [[NSFileManager defaultManager] createSymbolicLinkAtURL:xcdir
+                                                               withDestinationURL:asdir
+                                                                            error:&symlink_err];
+            if (!symlink_result) {
+                NSLog(@"createSymbolicLinkAtURL:%@ failed: %@", xcdir, symlink_err);
+            }
+#endif
             return;
         }
         
         // State 6
-        if (xclink_exists && !asdir_exists)
-        {
-            mkdir ([asdir fileSystemRepresentation], 0755);
+        if (xclink_exists && !asdir_exists) {
+            NSError *err;
+            BOOL result = [XAFileUtil createSupportFolderFor:@PRODUCT_NAME error:&err];
+
+            // If create… returns anything except YES, the directory does not exist
+            // and could not be created; and the reason is in &err.
+            if (!result) {
+                NSLog(@"Support directory does not exist and could not be created: %@", [err localizedDescription]);
+                [NSApp presentError:err]; // FIXME: Should we terminate here?
+            }
         }
     }
 }
@@ -252,7 +303,7 @@ fe_args (int argc, char *argv[])
 static void fix_log_files_and_pref ()
 {
     // Check for the change.. maybe some smart user did this already..
-    if ([[NSString stringWithUTF8String:prefs.logmask] hasSuffix:@".txt"])
+    if ([@(prefs.logmask) hasSuffix:@".txt"])
         return;
     
     // If logging is off, fix the pref and log files.
@@ -306,25 +357,25 @@ fe_init (void)
     [GLikeTimer self];
 #endif
     [NSApplication sharedApplication];
-    NSString *mainNibFile = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"NSMainNibFile"];
+    NSString *mainNibFile = [[NSBundle mainBundle] infoDictionary][@"NSMainNibFile"];
     [NSBundle loadNibNamed:mainNibFile owner:NSApp];
     
-    // This is not just for debug.
-#if !CLX_BUILD
-    if (GetCurrentKeyModifiers () & (optionKey | rightOptionKey))
-#endif
+    // Do not connect to network if app is launched while holding the Option key
+    if ([NSEvent modifierFlags] & NSAlternateKeyMask) {
         arg_dont_autoconnect = true;
-    
+    }
+
     NSString *bundle = [[NSBundle mainBundle] bundlePath];
-    chdir ([[NSString stringWithFormat:@"%@/..", bundle] fileSystemRepresentation]);
+    NSString *cwd = [NSString stringWithFormat:@"%@/..", bundle];
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:cwd];
     
 #if CONFIG_Azure
-    NSString *configDirectory = [SGFileUtility findApplicationSupportFor:@PRODUCT_NAME];
-    if ([SGFileUtility isSymLink:configDirectory]) {
+    NSURL *configDirectory = [XAFileUtil findSupportFolderFor:@PRODUCT_NAME];
+    if ([XAFileUtil isSymLink:configDirectory]) {
         if ([SGAlert confirmWithString:NSLocalizedStringFromTable(
-            @"This version of " @PRODUCT_NAME @" is sandboxed. "
-            @PRODUCT_NAME" tried to migrate you configuration but it seems to be failed. "
-            @"Do you want to download recovery script for this problem?", @"xchataqua", @"")])
+          @"This version of " @PRODUCT_NAME @" is sandboxed. "
+          @PRODUCT_NAME" tried to migrate your configuration, but it seems to have failed. "
+          @"Do you want to download a recovery script for this problem?", @"xchataqua", @"")])
         {
             [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/xchataqua/xchataqua/blob/master/README.md#i-lost-all-configurations-after-update-to-111-or-later"]];
             [NSApp terminate:nil];
@@ -441,22 +492,22 @@ fe_message (char *msg, int flags)
     
     if (flags & FE_MSG_INFO)
     {
-        [SGAlert noticeWithString:[NSString stringWithUTF8String:msg] andWait:wait];
+        [SGAlert noticeWithString:@(msg) andWait:wait];
     }
     else if (flags & FE_MSG_WARN)
     {
-        [SGAlert alertWithString:[NSString stringWithUTF8String:msg] andWait:wait];
+        [SGAlert alertWithString:@(msg) andWait:wait];
     }
     else if (flags & FE_MSG_ERROR)
     {
-        [SGAlert errorWithString:[NSString stringWithUTF8String:msg] andWait:wait];
+        [SGAlert errorWithString:@(msg) andWait:wait];
     }
 }
 
 void
 fe_get_int (char *msg, int def, void *callback, void *userdata)
 {
-    NSString *s = [SGRequest stringByRequestWithTitle:[NSString stringWithUTF8String:msg]
+    NSString *s = [SGRequest stringByRequestWithTitle:@(msg)
                                          defaultValue:[NSString stringWithFormat:@"%d", def]];
     
     int value = 0;
@@ -477,8 +528,8 @@ fe_get_int (char *msg, int def, void *callback, void *userdata)
 void
 fe_get_str (char *msg, char *def, void *callback, void *userdata)
 {
-    NSString *s = [SGRequest stringByRequestWithTitle:[NSString stringWithUTF8String:msg]
-                                         defaultValue:[NSString stringWithUTF8String:def]];
+    NSString *s = [SGRequest stringByRequestWithTitle:@(msg)
+                                         defaultValue:@(def)];
     
     char *value = NULL;
     int cancel = 1;
@@ -508,7 +559,7 @@ fe_beep (void)
 }
 
 void
-fe_add_rawlog (struct server *serv, char *text, int len, int outbound)
+fe_add_rawlog (struct server *serv, const char *text, const ssize_t len, int outbound)
 {
     RawLogWindow *window = [UtilityTabOrWindowView utilityIfExistsByKey:UtilityWindowKey(RawLogWindowKey, serv)];
     [window log:text length:len outbound:outbound];
@@ -541,7 +592,7 @@ fe_update_mode_buttons (struct session *sess, char mode, char sign)
 void
 fe_update_channel_key (struct session *sess)
 {
-    sess->gui->controller.keyTextField.stringValue = [NSString stringWithUTF8String:sess->channelkey];
+    sess->gui->controller.keyTextField.stringValue = @(sess->channelkey);
 }
 
 void
@@ -559,7 +610,7 @@ fe_is_chanwindow (struct server *serv)
 void
 fe_add_chan_list (struct server *serv, char *chan, char *users, char *topic)
 {
-    [(ChannelWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UtilityWindowKey(ChannelWindowKey, serv)] addChannelWithName:[NSString stringWithUTF8String:chan] numberOfUsers:[NSString stringWithUTF8String:users] topic:[NSString stringWithUTF8String:topic]];
+    [(ChannelWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UtilityWindowKey(ChannelWindowKey, serv)] addChannelWithName:@(chan) numberOfUsers:@(users) topic:@(topic)];
 }
 
 void
@@ -577,7 +628,7 @@ fe_is_banwindow (struct session *sess)
 void
 fe_add_ban_list (struct session *sess, char *mask, char *who, char *when, int is_exemption)
 {
-    [(BanWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UtilityWindowKey(BanWindowKey, sess)] addBanWithMask:[NSString stringWithUTF8String:mask] who:[NSString stringWithUTF8String:who] when:[NSString stringWithUTF8String:when] isExemption:is_exemption];
+    [(BanWindow *)[UtilityTabOrWindowView utilityIfExistsByKey:UtilityWindowKey(BanWindowKey, sess)] addBanWithMask:@(mask) who:@(who) when:@(when) isExemption:is_exemption];
 }     
 
 void
@@ -623,7 +674,7 @@ fe_progressbar_end (struct server *serv)
 }
 
 void
-fe_userlist_insert (struct session *sess, struct User *newuser, int row, int selected)
+fe_userlist_insert (struct session *sess, struct User *newuser, long row, int selected)
 {
     [sess->gui->controller userlistInsert:newuser row:(NSInteger)row select:selected];
 }
@@ -640,7 +691,7 @@ fe_userlist_remove (struct session *sess, struct User *user)
 }
 
 void
-fe_userlist_move (struct session *sess, struct User *user, int new_row)
+fe_userlist_move (struct session *sess, struct User *user, long new_row)
 {
     [sess->gui->controller userlistMove:user row:(NSInteger)new_row];
 }
@@ -786,7 +837,7 @@ fe_lastlog (session * sess, session * lastlog_sess, char *sstr, gboolean regexp)
 }
 
 void
-fe_set_lag (server * serv, int lag)
+fe_set_lag (server * serv, long lag)
 {
     // lag seems to be measured as tenths of seconds since the ping was sent.
     // -1 indicates that we sent a PING but we are stil waiting for the PING reply.
@@ -807,7 +858,7 @@ fe_set_lag (server * serv, int lag)
     
     [AquaChat forEachSessionOnServer:serv
                      performSelector:@selector (setLag:)
-                          withObject:[NSNumber numberWithFloat:per]];
+                          withObject:@(per)];
 }
 
 void
@@ -875,7 +926,7 @@ void fe_confirm (const char *message, void (*yesproc)(void *), void (*noproc)(vo
     o->yesproc = yesproc;
     o->noproc = noproc;
     o->ud = ud;
-    [SGAlert confirmWithString:[NSString stringWithUTF8String:message]
+    [SGAlert confirmWithString:@(message)
                         inform:o
                         yesSel:@selector (do_yes)
                          noSel:@selector (do_no)];
@@ -907,7 +958,7 @@ char * fe_get_inputbox_contents (struct session *sess)
 
 void fe_set_inputbox_contents (struct session *sess, char *text)
 {
-    [sess->gui->controller setInputText:[NSString stringWithUTF8String:text]];
+    [sess->gui->controller setInputText:@(text)];
 }
 
 int fe_get_inputbox_cursor (struct session *sess)
@@ -922,7 +973,7 @@ void fe_set_inputbox_cursor (struct session *sess, int delta, int pos)
 
 void fe_open_url (const char *url)
 {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url]]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@(url)]];
 }
 
 void fe_menu_del (menu_entry *me)
@@ -990,8 +1041,8 @@ void fe_get_file (const char *title, char *initial,
                   void (*callback) (void *userdata, char *file), void *userdata,
                   int flags)
 {
-    [SGFileSelection getFile:[NSString stringWithUTF8String:title]
-                     initial:[NSString stringWithUTF8String:initial]
+    [SGFileSelection getFile:@(title)
+                     initial:@(initial)
                     callback:callback userdata:userdata flags:flags];
 }
 
@@ -1009,9 +1060,9 @@ void fe_tray_set_icon (feicon icon)
 }
 void fe_tray_set_tooltip (const char *text)
 {
-    [[AquaChat sharedAquaChat] growl:[NSString stringWithUTF8String:text] title:nil];
+    [[AquaChat sharedAquaChat] growl:@(text) title:nil];
 }
 void fe_tray_set_balloon (const char *title, const char *text)
 {
-    [[AquaChat sharedAquaChat] growl:[NSString stringWithUTF8String:text] title:[NSString stringWithUTF8String:title]];
+    [[AquaChat sharedAquaChat] growl:@(text) title:@(title)];
 }

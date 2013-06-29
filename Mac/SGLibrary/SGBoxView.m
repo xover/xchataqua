@@ -17,7 +17,6 @@
 
 #define DEBUG_BOXVIEW NO
 
-#import "SGDebug.h"
 #import "SGBoxView.h"
 
 @interface SGBoxMetaView : SGMetaView {
@@ -172,7 +171,7 @@ NSRect NSRectFlip (NSRect rect)
 
 - (void) do_layout
 {
-    SGLog (DEBUG_BOXVIEW, @"Layout box view %p\n", self);
+    dlog (DEBUG_BOXVIEW, @"Layout box view %p\n", self);
     
     if ([metaViews count] < 1) return;
         
@@ -187,8 +186,8 @@ NSRect NSRectFlip (NSRect rect)
 
     NSRect r = [self bounds];
     
-    SGLog (DEBUG_BOXVIEW, @"I am %f %f %f %f %p\n", r.origin.x, r.origin.y, r.size.width, r.size.height, self);
-    SGLog (DEBUG_BOXVIEW, @"I have %ld children\n", [metaViews count]);
+    dlog (DEBUG_BOXVIEW, @"I am %f %f %f %f %p\n", r.origin.x, r.origin.y, r.size.width, r.size.height, self);
+    dlog (DEBUG_BOXVIEW, @"I have %ld children\n", [metaViews count]);
     
     if (orientation == SGBoxOrientationVertical)
         r = NSRectFlip(r);
@@ -226,7 +225,7 @@ NSRect NSRectFlip (NSRect rect)
     NSInteger i;
     for (i = first; i != stop; i += incr)
     {
-        id metaView = [metaViews objectAtIndex:i];
+        id metaView = metaViews[i];
         
         if (will_stretch && stretchView == [metaView view])
             break;
@@ -246,7 +245,7 @@ NSRect NSRectFlip (NSRect rect)
             if (orientation == SGBoxOrientationVertical)
                 b = NSRectFlip (b);
     
-            SGLog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
+            dlog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
                      metaView, b.origin.x, b.origin.y, b.size.width, b.size.height);
                 
             [metaView setFrame:b];
@@ -259,7 +258,7 @@ NSRect NSRectFlip (NSRect rect)
         
         for (NSUInteger i = 0; i < [metaViews count]; i ++)
         {
-            id metaView = [metaViews objectAtIndex:i];
+            id metaView = metaViews[i];
             if (![[metaView view] isHidden])
             {
                 NSRect b = [[metaView view] frame];
@@ -269,7 +268,7 @@ NSRect NSRectFlip (NSRect rect)
                 if (orientation == SGBoxOrientationVertical)
                     b = NSRectFlip (b);
 
-                SGLog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
+                dlog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
                          metaView, b.origin.x, b.origin.y, b.size.width, b.size.height);
 
                 [metaView setFrame:b];
@@ -286,7 +285,7 @@ NSRect NSRectFlip (NSRect rect)
     if (i != stop)
     for (NSInteger j = stop - incr; j != i; j -= incr)
     {
-        id metaView = [metaViews objectAtIndex:j];
+        id metaView = metaViews[j];
         
         if (stretchView == [metaView view])
             break;
@@ -306,7 +305,7 @@ NSRect NSRectFlip (NSRect rect)
             if (orientation == SGBoxOrientationVertical)
                 b = NSRectFlip (b);
 
-            SGLog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
+            dlog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
                      metaView, b.origin.x, b.origin.y, b.size.width, b.size.height);
 
             [metaView setFrame:b];
@@ -319,7 +318,7 @@ NSRect NSRectFlip (NSRect rect)
     {
         // We do this one.. visible or not.  Is this a good idea?
         
-        id metaView = [metaViews objectAtIndex:i];
+        id metaView = metaViews[i];
         
         NSRect b = [metaView prefSize];
 
@@ -333,7 +332,7 @@ NSRect NSRectFlip (NSRect rect)
         if (orientation == SGBoxOrientationVertical)
             b = NSRectFlip (b);
 
-        SGLog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
+        dlog (DEBUG_BOXVIEW, @"Setting %p to %f %f %f %f\n",
                  metaView, b.origin.x, b.origin.y, b.size.width, b.size.height);
 
         [metaView setFrame:b];

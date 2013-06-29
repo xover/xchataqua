@@ -100,13 +100,8 @@ NSMutableArray *SGApplicationCustomers = nil;
 	return [view mouse:point inRect:[view bounds]];
 }
 
-- (void) cancelRequestEvents:(id) req_id
-{
-	[SGApplicationCustomers removeObject:req_id];
-}
-
 - (void)sendOriginalEvent:(NSEvent *)anEvent {
-    SGAssert(NO);
+    dassert(NO);
 }
 
 - (void)sendXAEvent:(NSEvent *)anEvent {
